@@ -3,12 +3,11 @@
 import { ReactLenis } from 'lenis/react'
 import gsap from 'gsap'
 import { ScrollTrigger } from 'gsap/ScrollTrigger'
-import { useGSAP } from '@gsap/react'
 
 import Hero from './components/Hero'
 import WhoWeAre from './components/WhoWeAre'
 
-gsap.registerPlugin(ScrollTrigger, useGSAP)
+gsap.registerPlugin(ScrollTrigger)
 
 const page = () => {
   return (

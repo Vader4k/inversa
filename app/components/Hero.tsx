@@ -3,7 +3,7 @@
 import { useGSAP } from '@gsap/react'
 import gsap from 'gsap'
 import { useRef } from 'react'
-import { ScrollTrigger } from 'gsap/ScrollTrigger'
+import { ScrollTrigger } from 'gsap/all'
 
 const Hero = () => {
 
@@ -36,6 +36,129 @@ const Hero = () => {
 
     const ease = (x: number) => x * x * (3 - 2 * x)
 
+
+    ScrollTrigger.create({
+      trigger: containerRef.current,
+      start: "top top",
+      end: () => `+=${window.innerHeight * 4}px`,
+      scrub: 1,
+      pin: true,
+      pinSpacing: true,
+      //on update is a method that is called every time the scroll trigger updates that moves from 0 to 1
+      onUpdate: (self) => {
+        gsap.set(heroScrollProgressBar, { '--progress': self.progress })
+
+        gsap.set(heroContent, {
+          y: -self.progress * heroContainerMoveDistance
+        })
+
+        let heroImgProgress;
+        if (self.progress <= 0.45) {
+          heroImgProgress = ease(self.progress / 0.45) * 0.65
+        } else if (self.progress <= 0.75) {
+          heroImgProgress = 0.65
+        } else {
+          heroImgProgress = 0.65 + ease((self.progress - 0.75) / 0.25) * 0.35
+        }
+
+        gsap.set(heroImgElement, {
+          y: heroImgProgress * heroImgMoveDistance
+        })
+
+        let heroMaskScale;
+        let heroImgSaturation;
+        let heroImgOverlayOpacity;
+
+        if (self.progress <= 0.4) {
+          heroMaskScale = 2.5
+          heroImgSaturation = 1
+          heroImgOverlayOpacity = 0.35
+        } else if (self.progress <= 0.5) {
+          const phaseProgress = ease((self.progress - 0.4) / 0.1)
+          heroMaskScale = 2.5 - phaseProgress * 1.5
+          heroImgSaturation = 1 - phaseProgress
+          heroImgOverlayOpacity = 0.35 + phaseProgress * 0.35
+        } else if (self.progress <= 0.75) {
+          heroMaskScale = 1
+          heroImgSaturation = 0
+          heroImgOverlayOpacity = 0.7
+        } else if (self.progress <= 0.85) {
+          const phaseProgress = ease((self.progress - 0.75) / 0.1)
+          heroMaskScale = 1 + phaseProgress * 1.5
+          heroImgSaturation = phaseProgress
+          heroImgOverlayOpacity = 0.7 - phaseProgress * 0.35
+        } else {
+          heroMaskScale = 2.5
+          heroImgSaturation = 1
+          heroImgOverlayOpacity = 0.35
+        }
+
+        gsap.set(heroMask, {
+          scale: heroMaskScale
+        })
+
+        gsap.set(heroImgElement, {
+          filter: `saturate(${heroImgSaturation})`
+        })
+
+        gsap.set(heroImgElement, {
+          "--overlay-opacity": heroImgOverlayOpacity
+        })
+
+        let heroGridOpacity;
+        if (self.progress <= 0.475) {
+          heroGridOpacity = 0;
+        } else if (self.progress <= 0.5) {
+          heroGridOpacity = ease((self.progress - 0.475) / 0.025)
+        } else if (self.progress <= 0.75) {
+          heroGridOpacity = 1
+        } else if (self.progress <= 0.775) {
+          heroGridOpacity = 1 - ease((self.progress - 0.75) / 0.025)
+        } else {
+          heroGridOpacity = 0
+        }
+
+        gsap.set(heroGridOverlay, {
+          opacity: heroGridOpacity
+        })
+
+        let marker1Opacity;
+        if (self.progress <= 0.5) {
+          marker1Opacity = 0
+        } else if (self.progress <= 0.525) {
+          marker1Opacity = ease((self.progress - 0.5) / 0.025)
+        } else if (self.progress <= 0.7) {
+          marker1Opacity = 1
+        } else if (self.progress <= 0.75) {
+          marker1Opacity = 1 - ease((self.progress - 0.7) / 0.05)
+        } else {
+          marker1Opacity = 0
+        }
+
+        gsap.set(marker1, {
+          opacity: marker1Opacity
+        })
+
+        let marker2Opacity;
+        if (self.progress <= 0.55) {
+          marker2Opacity = 0
+        } else if (self.progress <= 0.575) {
+          marker2Opacity = ease((self.progress - 0.55) / 0.025)
+        } else if (self.progress <= 0.7) {
+          marker2Opacity = 1
+        } else if (self.progress <= 0.75) {
+          marker2Opacity = 1 - ease((self.progress - 0.7) / 0.05)
+        } else {
+          marker2Opacity = 0
+        }
+
+        gsap.set(marker2, {
+          opacity: marker2Opacity
+        })
+      }
+
+    })
+
   }, { scope: containerRef })
 
   return (
@@ -67,7 +190,7 @@ const Hero = () => {
       <div className="hero-content" ref={heroContentRef}>
         <div className="hero-content-block">
           <div className="hero-content-copy">
-            <h2>Location Framework</h2>
+            <h1>Location Framework</h1>
           </div>
         </div>
         <div className="hero-content-block">

@@ -46,7 +46,7 @@ h2 {
 }
 
 p {
-    font-size: 1.125rem;
+    font-size: 0.9rem;
     font-weight: 400;
     line-height: 1.4;
 }
@@ -288,4 +288,3 @@ section {
         right: 1rem;
     }
 }
-
